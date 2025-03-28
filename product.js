@@ -10,7 +10,7 @@ const categoryMap = {
   electronics: "electronics",
 };
 
-// Anropa getData med den valda kategorin
+// Anropa getData med den valda kategorin.
 getData("https://fakestoreapi.com/products", selectedCategory);
 
 // Här definieras getData och loadProducts-funktionerna
