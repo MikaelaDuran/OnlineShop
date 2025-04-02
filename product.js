@@ -17,7 +17,16 @@ getData("https://fakestoreapi.com/products", selectedCategory);
 async function getData(url, category) {
   try {
     const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
     let products = await response.json();
+
+    if (!products || !Array.isArray(products)) {
+      throw new Error('Invalid or empty JSON data received.');
+    }
 
     // Filtrera om kategori inte är "all"
     if (category !== "all" && categoryMap[category]) {
@@ -34,6 +43,8 @@ async function getData(url, category) {
 
 function loadProducts(products) {
   const productContainer = document.getElementById("product-container");
+
+
   productContainer.innerHTML = ""; // Rensa tidigare innehåll
 
   const rowDiv = document.createElement("div");
@@ -43,7 +54,6 @@ function loadProducts(products) {
     const productDiv = document.createElement("div");
     productDiv.classList.add("col-lg-3", "col-md-6", "col-sm-12");
 
-    // Lagt till ratio-4x3 + object-fit: contain + text-truncate
     productDiv.innerHTML = `
       <div class="card h-100">
         <div class="ratio ratio-4x3">
@@ -62,16 +72,18 @@ function loadProducts(products) {
         </div>
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-truncate">${product.title}</h5>
-          <p class="card-text flex-grow-1">${product.description.substring(
-            0,
-            100
-          )}...</p>
+          <p class="card-text flex-grow-1">${product.description.substring(0, 100)}...</p>
           <p class="fw-bold">${product.price}$</p>
+    
           <button 
-            class="btn btn-outline-secondary mt-auto w-100" 
-            onclick="location.href='order-form.html?product-id=${product.id}'"
+            class="btn btn-outline-secondary mt-auto w-100 add-to-cart-btn"
+            data-id="${product.id}"
+            data-title="${product.title.replace(/"/g, '&quot;')}"
+            data-image="${product.image}"
+            data-description="${product.description.replace(/"/g, '&quot;')}"
+            data-price="${product.price}"
           >
-            Buy
+            Add to Cart
           </button>
         </div>
       </div>
@@ -81,7 +93,28 @@ function loadProducts(products) {
   });
 
   productContainer.appendChild(rowDiv);
+
+  //Koppla event listeners till alla knappar
+  const buttons = document.querySelectorAll(".add-to-cart-btn");
+  
+  buttons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const product = {
+        id: e.target.dataset.id,
+        title: e.target.dataset.title,
+        image: e.target.dataset.image,
+        description: e.target.dataset.description,
+        price: parseFloat(e.target.dataset.price),
+        quantity: 1
+      };
+
+    
+      addProductToCart(product);
+    });
+  });
 }
+
+
 
 function popUpWindow(imageSrc, title, description, price) {
   const modal = document.getElementById("customModal");
@@ -94,10 +127,12 @@ function popUpWindow(imageSrc, title, description, price) {
 }
 
 // Close modal when clicking on 'X' button
-document.querySelector(".close").addEventListener("click", function () {
-  document.getElementById("customModal").style.display = "none";
-});
-
+const closeBtn = document.querySelector(".close");
+if (closeBtn) {
+  closeBtn.addEventListener("click", function () {
+    document.getElementById("customModal").style.display = "none";
+  });
+}
 // Close modal when clicking outside the modal content
 window.addEventListener("click", function (event) {
   const modal = document.getElementById("customModal");
