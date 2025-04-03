@@ -14,8 +14,27 @@ function addProductToCart(product) {
     console.log("Product added to cart!", product);
   }
   
-    function deleteProductFromCart(productId) {
-    }
+  //FUNGERAR EJ ÄNNU
+  function deleteProductFromCart(productId) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  
+    const updatedCart = cart.reduce((acc, product) => {
+      if (product.id == productId) {
+        if (product.quantity > 1) {
+          // Minska antal
+          product.quantity -= 1;
+          acc.push(product);
+        }
+        // Om quantity = 1 → ta inte med den alls (radera)
+      } else {
+        acc.push(product);
+      }
+      return acc;
+    }, []);
+  
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    displayCart(); 
+  }
 
     function clearCart() {
     }
@@ -37,24 +56,30 @@ function addProductToCart(product) {
         productContainer.innerHTML = ""; // Rensa tidigare innehåll
       
         cart.forEach((product) => {
-          const productDiv = document.createElement("div");
-          productDiv.classList.add("card", "mb-3");
-          productDiv.innerHTML = `
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="${product.image}" class="img-fluid rounded-start" alt="${product.title}">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">${product.title}</h5>
-                  <p class="card-text">${product.description}</p>
-                  <p class="card-text"><small class="text-muted">Price: $${product.price}</small></p>
-                  <p class="card-text"><small class="text-muted">Quantity: ${product.quantity}</small></p>
-                </div>
+          const productCard = document.createElement("div");
+          productCard.classList.add("card", "mb-3",);
+          productCard.style.width = "100%";
+          productCard.style.maxWidth = "600px";
+          productCard.style.margin = "0 auto"; 
+        
+          productCard.innerHTML = `
+          <div class="card-body d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <img src="${product.image}" class="img-fluid" style="max-height: 80px;" alt="${product.title}">
+              <div>
+                <h6 class="card-title mb-1">${product.title}</h6>
+                <p class="card-text mb-0">Price: $${product.price}</p>
               </div>
             </div>
-          `;
-          productContainer.appendChild(productDiv);
+            
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-secondary btn-sm btn-decrease" data-id="${product.id}">−</button>
+              <span class="fw-bold" id="quantity-${product.id}">${product.quantity}</span>
+              <button class="btn btn-secondary btn-sm btn-increase" data-id="${product.id}">+</button>
+            </div>
+          </div>
+        `;
+          productContainer.appendChild(productCard);
         });
       }
       
