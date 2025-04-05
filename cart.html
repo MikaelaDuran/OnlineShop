@@ -129,16 +129,20 @@
 
   <br /><br /><br /><br />
 
+  
+
   <div class="product-form-container">
     
     <!-- Produkter från kundvagnen kommer att visas här -->
   </div>
 
+  
     <br><br><br>
 
 
     <!-- Bootstrap form -->
     <form class="container m-20" onsubmit="return validateForm()" action="javascript: orderConfirmation()">
+      <p id="total-price" class="total-price text-center"></p>
 
       <div class="form-group">
         <label for="exampleInputname">Full name</label>
@@ -204,12 +208,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!--  Läggs till för att även index sidan ska uppdatera antalet varor-->
+    <!--  Läggs till för att även index sidan ska uppdatera antalet varor och priset-->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         updateCartCount();
+        setPrice(); // Lägg till denna
       });
     </script>
+    
 
 </body>
 

@@ -45,18 +45,16 @@ function addProductToCart(product) {
     return count;
   }
 
-
+  function totalPriceElement(productId) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const product = cart.find(item => item.id === productId);
+    const totalElement = document.getElementById(`product-total-${productId}`);
   
-  function totalPrice() {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let total = 0;
-  
-    cart.forEach((item) => {
-      total += item.price * item.quantity;
-    });
-  
-    return total;
+    if (product && totalElement) {
+      totalElement.textContent = `Total: $${(product.price * product.quantity).toFixed(2)}`;
+    }
   }
+  
 
   function updateCartCount() {
     const count = itemCount();
@@ -66,6 +64,15 @@ function addProductToCart(product) {
     }
   }
 
+  function removeProduct(productId) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+    updateCartCount();
+    setPrice();
+  }
+
 
   function emptyCart() {
     localStorage.removeItem("cart"); 
@@ -73,6 +80,26 @@ function addProductToCart(product) {
     updateCartCount();  
     
   }
+
+  function totalPrice() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
+    cart.forEach((item) => {
+      total += item.price * item.quantity;
+    });
+    return total;
+  }
+
+  
+
+  function setPrice() {
+    const total = totalPrice();
+    const totalPriceElement = document.getElementById("total-price");
+    if (totalPriceElement) {
+      totalPriceElement.textContent = `Total: $${total.toFixed(2)}`;
+    }
+  }
+
 
     function increaseProductQuantity(productId) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -98,8 +125,7 @@ function addProductToCart(product) {
       
         if (cart.length === 0) {
           productContainer.innerHTML = `
-          <h4 style="margin: 2rem; text-align: center;">Your cart is empty</h4>
-  `
+          <h4 style="margin: 2rem; text-align: center;">Your cart is empty</h4>`
           return;
         }
       
@@ -113,22 +139,33 @@ function addProductToCart(product) {
           productCard.style.margin = "0 auto"; 
         
           productCard.innerHTML = `
-          <div class="card-body d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-              <img src="${product.image}" class="img-fluid" style="max-height: 80px;" alt="${product.title}">
-              <div>
-                <h6 class="card-title mb-1">${product.title}</h6>
-                <p class="card-text mb-0">Price: $${product.price}</p>
+          <div class="card-body position-relative">
+
+            <!-- X Ta bort-knapp i övre högra hörnet -->
+            <button class="btn btn-sm  btn-remove position-absolute top-0 end-0 m-2" data-id="${product.id}">
+              &times;
+            </button>
+
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-3">
+                <img src="${product.image}" class="img-fluid" style="max-height: 80px;" alt="${product.title}">
+                <div>
+                  <h6 class="card-title mb-1">${product.title}</h6>
+                  <p class="card-text mb-0 product-total" id="product-total-${product.id}">
+                    Price: $${(product.price * product.quantity).toFixed(2)}
+                  </p>
+                </div>
               </div>
-            </div>
-            
-            <div class="d-flex align-items-center gap-2">
-              <button class="btn btn-secondary btn-sm btn-decrease" data-id="${product.id}">−</button>
-              <span class="fw-bold" id="quantity-${product.id}">${product.quantity}</span>
-              <button class="btn btn-secondary btn-sm btn-increase" data-id="${product.id}">+</button>
+
+              <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-secondary btn-sm btn-decrease" data-id="${product.id}">−</button>
+                <span class="fw-bold" id="quantity-${product.id}">${product.quantity}</span>
+                <button class="btn btn-secondary btn-sm btn-increase" data-id="${product.id}">+</button>
+              </div>
             </div>
           </div>
         `;
+
           productContainer.appendChild(productCard);
         });
 
@@ -152,6 +189,8 @@ function addProductToCart(product) {
           button.addEventListener("click", () => {
             const productId = button.getAttribute("data-id");
             decreaseProductQuantity(productId);
+            setPrice();
+
           });
         });
 
@@ -160,8 +199,20 @@ function addProductToCart(product) {
           button.addEventListener("click", () => {
             const productId = button.getAttribute("data-id");
             increaseProductQuantity(productId);
+            setPrice();
           });
   });
+
+      // Event listener för X
+      document.querySelectorAll(".btn-remove").forEach((button) => {
+        button.addEventListener("click", () => {
+          const productId = button.getAttribute("data-id"); 
+          if (confirm("Are you sure you want to remove this product?")) {
+            removeProduct(productId);
+          }
+        });
+      });
+      
 
       }
       
