@@ -1,3 +1,4 @@
+//Lägger till en produkt i kundvagnen.
 function addProductToCart(product) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
   
@@ -14,26 +15,18 @@ function addProductToCart(product) {
     updateCartCount();
   }
   
+  //Uppdaterar det totala priset i kundvagnen när en produkt läggs till.
+  function totalPriceElement(productId) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const product = cart.find(item => item.id === productId);
+    const totalElement = document.getElementById(`product-total-${productId}`);
   
-  function decreaseProductQuantity(productId) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  
-    const productIndex = cart.findIndex((item) => item.id === productId);
-  
-    // Kontrollerar om produkten finns i kundvagnen
-    if (productIndex !== -1) {
-      cart[productIndex].quantity -= 1;
-  
-      if (cart[productIndex].quantity <= 0) {
-        cart.splice(productIndex, 1); // Ta bort produkten helt
-      }
-  
-      localStorage.setItem("cart", JSON.stringify(cart));
-      displayCart(); // Uppdatera vyn
-      updateCartCount();
+    if (product && totalElement) {
+      totalElement.textContent = `Total: $${(product.price * product.quantity).toFixed(2)}`; //toFixed 2 för att visa två decimaler
     }
   }
-   
+
+  //Visar antalet produkter i kundvagnen.
   function itemCount(){
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let count = 0;
@@ -44,18 +37,9 @@ function addProductToCart(product) {
   
     return count;
   }
-
-  function totalPriceElement(productId) {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const product = cart.find(item => item.id === productId);
-    const totalElement = document.getElementById(`product-total-${productId}`);
-  
-    if (product && totalElement) {
-      totalElement.textContent = `Total: $${(product.price * product.quantity).toFixed(2)}`;
-    }
-  }
   
 
+  //Uppdaterar antalet produkter i kundvagnen (IKONEN).
   function updateCartCount() {
     const count = itemCount();
     const cartCountElement = document.getElementById("cart-count");
@@ -64,6 +48,7 @@ function addProductToCart(product) {
     }
   }
 
+  //Tar bort en produkt från kundvagnen.
   function removeProduct(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart = cart.filter(item => item.id !== productId);
@@ -74,13 +59,16 @@ function addProductToCart(product) {
   }
 
 
+  //Tömmer hela kundvagnen.
   function emptyCart() {
     localStorage.removeItem("cart"); 
     displayCart();                   
-    updateCartCount();  
+    updateCartCount(); 
+    setPrice(); 
     
   }
 
+  //Beräknar det totala priset för alla produkter i kundvagnen.
   function totalPrice() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let total = 0;
@@ -91,7 +79,7 @@ function addProductToCart(product) {
   }
 
   
-
+  //Visar det totala priset i kundvagnen.
   function setPrice() {
     const total = totalPrice();
     const totalPriceElement = document.getElementById("total-price");
@@ -100,7 +88,7 @@ function addProductToCart(product) {
     }
   }
 
-
+  //Lägger till event listeners för att öka kvantiteten
     function increaseProductQuantity(productId) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
     
@@ -111,10 +99,31 @@ function addProductToCart(product) {
         cart[productIndex].quantity += 1;
     
         localStorage.setItem("cart", JSON.stringify(cart));
-        displayCart(); // Uppdatera visningen
+        displayCart(); // Visa uppdaterad kundvagn
         updateCartCount();
       }
     }
+
+    //Lägger till event listeners för att minska kvantiteten
+    function decreaseProductQuantity(productId) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+      const productIndex = cart.findIndex((item) => item.id === productId);
+    
+      // Kontrollerar om produkten finns i kundvagnen
+      if (productIndex !== -1) {
+        cart[productIndex].quantity -= 1;
+    
+        if (cart[productIndex].quantity <= 0) {
+          cart.splice(productIndex, 1); // Ta bort produkten helt
+        }
+    
+        localStorage.setItem("cart", JSON.stringify(cart));
+        displayCart();  //§ Visa uppdaterad kundvagn
+        updateCartCount();
+      }
+    }
+     
     
         
     function displayCart() {
