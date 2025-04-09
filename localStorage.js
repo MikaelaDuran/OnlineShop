@@ -238,7 +238,7 @@ function addProductToCart(product) {
       
         if (cart.length === 0) {
           productContainer.innerHTML = `
-            <h4 style="margin: 2rem; text-align: center;">Din varukorg är tom</h4>`;
+            <h4 style="margin: 2rem; text-align: center;"></h4>`;
           return;
         }
         productContainer.innerHTML = ""; // Töm innan vi lägger till
