@@ -44,7 +44,6 @@ async function getData(url, category) {
 function loadProducts(products) {
   const productContainer = document.getElementById("product-container");
 
-
   productContainer.innerHTML = ""; // Rensa tidigare innehåll
 
   const rowDiv = document.createElement("div");
@@ -77,11 +76,7 @@ function loadProducts(products) {
     
           <button 
             class="btn btn-outline-secondary mt-auto w-100 add-to-cart-btn"
-            data-id="${product.id}"
-            data-title="${product.title.replace(/"/g, '&quot;')}"
-            data-image="${product.image}"
-            data-description="${product.description.replace(/"/g, '&quot;')}"
-            data-price="${product.price}"
+            id="add-to-cart-btn-${product.id}"
           >
             Add to Cart
           </button>
@@ -94,27 +89,28 @@ function loadProducts(products) {
 
   productContainer.appendChild(rowDiv);
 
-  //Koppla event listeners till alla knappar
-  const buttons = document.querySelectorAll(".add-to-cart-btn");
-  
-  buttons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      const product = {
-        id: e.target.dataset.id,
-        title: e.target.dataset.title,
-        image: e.target.dataset.image,
-        description: e.target.dataset.description,
-        price: parseFloat(e.target.dataset.price),
-        quantity: 1
-      };
-
+  // Lägg till event listener för varje "Add to Cart"-knapp utan att använda data-atribut
+  products.forEach((product) => {
+    const button = document.getElementById(`add-to-cart-btn-${product.id}`);
     
-      addProductToCart(product);
-    });
+    if (button) {
+      button.addEventListener("click", () => {
+        // Här kan vi skapa en produktobjekt direkt och lägga till den i varukorgen
+        const productToAdd = {
+          id: product.id,
+          title: product.title,
+          image: product.image,
+          description: product.description,
+          price: product.price,
+          quantity: 1,
+        };
+
+        // Lägg till produkt i varukorgen
+        addProductToCart(productToAdd);
+      });
+    }
   });
 }
-
-
 
 function popUpWindow(imageSrc, title, description, price) {
   const modal = document.getElementById("customModal");
