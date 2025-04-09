@@ -129,33 +129,28 @@
 
     <br /><br /><br /><br />
 
-    <div class="product-form-container">
-      <!-- Bootstrap card -->
-
-      <div class="card order-card" style="width: 18rem">
-        <img
-          id="product-image-form"
-          class="card-img-top"
-          src="..."
-          alt="Card image cap"
-        />
-        <div class="card-body">
-          <h5 id="product-title-form" class="card-title">Card title</h5>
-          <p id="product-desc-form" class="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </p>
-          <p id="product-price-form" class="fw-bold"></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="order-confirmation-text">
+    <div class="order-confirmation-text text-center">
       <h2>Thank you for your order!</h2>
       <h4>Your order has been successfully made.</h4>
     </div>
 
+    <p id="total-price" class="total-price text-center"></p>
+    
+    <!-- Här visas inköpen -->
+    <div class="purchase-items-container my-4"></div>
+    
+    <div class="total-price"></div>
+
     <script src="order-form.js"></script>
+    <script src="localStorage.js"></script>
+    <script src="product.js"></script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        updateCartCount();
+        displayPurshase();
+      });
+    </script>;
 
     <!-- Lägg till Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -163,9 +158,7 @@
   </body>
 </html>
 
-    <!--  Läggs till för att även index sidan ska uppdatera antalet varor-->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        updateCartCount();
-      });
-    </script>
+
+    
+
+    

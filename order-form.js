@@ -20,18 +20,18 @@ async function getData() {
 
 getData();
 
-function orderConfirmation() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const prodId = urlParams.get("product-id");
-  console.log("Found prod id ${prodId}" +prodId)
-  window.location.href = 'order-confirmation.html?product-id=' + prodId;
- // window.location.href('order-confirmation.html?product-id='+prodId)
 
-}
 
 function validateForm() {
     
     let isValid = true;
+
+      // Kontrollera om varukorgen är tom
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) {
+        alert("Din varukorg är tom. Lägg till produkter innan du fortsätter.");
+        isValid = false;
+      }
 
       document.getElementById("nameError").textContent = "";
       document.getElementById("emailError").textContent = "";

@@ -139,6 +139,8 @@ function addProductToCart(product) {
         }
       
         productContainer.innerHTML = ""; // Rensa tidigare innehåll
+
+        let total = 0;
       
         cart.forEach((product) => {
           const productCard = document.createElement("div");
@@ -222,10 +224,60 @@ function addProductToCart(product) {
         });
       });
       
+    }
 
+
+      // Kör funktionen när sidan laddas
+       document.addEventListener("DOMContentLoaded", displayCart);
+    
+      
+      function displayPurshase() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const productContainer = document.querySelector(".purchase-items-container");
+        if (!productContainer) return;
+      
+        if (cart.length === 0) {
+          productContainer.innerHTML = `
+            <h4 style="margin: 2rem; text-align: center;">Din varukorg är tom</h4>`;
+          return;
+        }
+        productContainer.innerHTML = ""; // Töm innan vi lägger till
+
+        setPrice();
+      
+        cart.forEach((product) => {
+          const productCard = document.createElement("div");
+          productCard.classList.add("card", "mb-3");
+          productCard.style.width = "100%";
+          productCard.style.maxWidth = "600px";
+          productCard.style.margin = "0 auto";
+      
+          productCard.innerHTML = `
+            <div class="card-body d-flex align-items-center gap-3">
+              <img src="${product.image}" class="img-fluid" style="max-height: 80px;" alt="${product.title}">
+              <div>
+                <h6 class="card-title mb-1">${product.title}</h6>
+                <p class="card-text mb-0">Quantity: ${product.quantity}</p>
+                <p class="card-text mb-0">Price: $${(product.price * product.quantity).toFixed(2)}</p>
+              </div>
+            </div>
+          `;
+      
+          productContainer.appendChild(productCard);
+          
+        });
+
+        // Töm varukorgen
+      localStorage.removeItem("cart");
+
+      // Uppdatera kundvagnen i headern
+      updateCartCount();
+
+        
       }
       
-      // Kör funktionen när sidan laddas
-      document.addEventListener("DOMContentLoaded", displayCart);
 
+     
+      
+      
     
