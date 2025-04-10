@@ -56,7 +56,6 @@ function addProductToCart(product) {
     displayCart();                   
     updateCartCount(); 
     setPrice(); 
-    
   }
 
   //Beräknar det totala priset för alla produkter i kundvagnen.
@@ -169,7 +168,7 @@ function addProductToCart(product) {
       productContainer.appendChild(productCard);
     });
   
-    // Lägg till knapparnas event listeners
+    // Knapparnas event listeners
     document.querySelectorAll(".btn-decrease").forEach((button) => {
       button.addEventListener("click", () => {
         const productId = Number(button.getAttribute("data-id"));
@@ -195,7 +194,7 @@ function addProductToCart(product) {
       });
     });
   
-    // Skapa och lägg till "Empty Cart"-knappen utanför loopen
+    //"Empty Cart"-knappen 
     const clearButton = document.createElement("button");
     clearButton.textContent = "Empty Cart";
     clearButton.classList.add("btn", "btn-danger", "mt-4");
@@ -211,9 +210,6 @@ function addProductToCart(product) {
     productContainer.appendChild(clearButton);
   }
   
-  
-
-
       // Kör funktionen när sidan laddas
        document.addEventListener("DOMContentLoaded", displayCart);
     

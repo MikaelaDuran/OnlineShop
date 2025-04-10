@@ -89,13 +89,12 @@ function loadProducts(products) {
 
   productContainer.appendChild(rowDiv);
 
-  // Lägg till event listener för varje "Add to Cart"-knapp utan att använda data-atribut
+  // Lägg till event listener för varje "Add to Cart"-knapp u
   products.forEach((product) => {
     const button = document.getElementById(`add-to-cart-btn-${product.id}`);
     
     if (button) {
       button.addEventListener("click", () => {
-        // Här kan vi skapa en produktobjekt direkt och lägga till den i varukorgen
         const productToAdd = {
           id: product.id,
           title: product.title,
