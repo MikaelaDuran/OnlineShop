@@ -2,8 +2,8 @@ async function getData() {
   const urlParams = new URLSearchParams(window.location.search);
   const prodId = urlParams.get("product-id");
 
-  const response = await fetch('https://fakestoreapi.com/products/' + prodId);
-  const data = await response.json();
+  const data = await fetch('https://fakestoreapi.com/products/'+prodId)
+  .then(response => response.json());
 
   const productImageElement = document.getElementById("product-image-form");
   productImageElement.src = data.image;
@@ -20,6 +20,14 @@ async function getData() {
 
 getData();
 
+function orderConfirmation() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const prodId = urlParams.get("product-id");
+  console.log("Found prod id ${prodId}" +prodId)
+  window.location.href = 'order-confirmation.html?product-id=' + prodId;
+ // window.location.href('order-confirmation.html?product-id='+prodId)
+
+}
 
 function validateForm() {
     

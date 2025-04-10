@@ -15,16 +15,6 @@ function addProductToCart(product) {
     updateCartCount();
   }
   
-  //Uppdaterar det totala priset i kundvagnen när en produkt läggs till.
-  function totalPriceElement(productId) {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const product = cart.find(item => item.id === productId);
-    const totalElement = document.getElementById(`product-total-${productId}`);
-  
-    if (product && totalElement) {
-      totalElement.textContent = `Total: $${(product.price * product.quantity).toFixed(2)}`; //toFixed 2 för att visa två decimaler
-    }
-  }
 
   //Visar antalet produkter i kundvagnen.
   function itemCount(){
